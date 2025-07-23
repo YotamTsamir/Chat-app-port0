@@ -8,7 +8,7 @@ import { storage } from "../firebase/config";
 import { resizeImageToBlob } from "../utils";
 
 const UserMenu = () => {
-  const user = useUser();
+  const { user } = useUser();
   const [open, setOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -18,7 +18,7 @@ const UserMenu = () => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    const blob = await resizeImageToBlob(file)
+    const blob = await resizeImageToBlob(file);
 
     const storageRef = ref(storage, `avatars/${user.uid}.jpg`);
     await uploadBytes(storageRef, blob);

@@ -15,6 +15,7 @@ export type Message = {
   text: string;
   userName: string;
   photoURL: string;
+  userEmail:string;
   createdAt?: any;
 };
 
@@ -23,7 +24,8 @@ export const sendMessage = async (
   room: string,
   text: string,
   userName: string,
-  photoURL: string
+  photoURL: string,
+  userEmail: string
 ) => {
   await addDoc(collection(db, "messages"), {
     room,
@@ -31,6 +33,7 @@ export const sendMessage = async (
     userName,
     createdAt: serverTimestamp(),
     photoURL,
+    userEmail,
   });
 };
 

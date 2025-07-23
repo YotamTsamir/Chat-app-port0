@@ -1,20 +1,33 @@
-// src/context/UserContext.tsx
 import { createContext, useContext, useEffect, useState } from "react";
-import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../firebase/config";
+import type { User } from "firebase/auth";
 
-const auth = getAuth();
+type UserContextValue = {
+  user: User | null;
+  loading: boolean;
+};
 
-const UserContext = createContext<User | null>(null);
-
-export const useUser = () => useContext(UserContext);
+const UserContext = createContext<UserContextValue>({ user: null, loading: true });
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, setUser);
-    return unsub;
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, loading }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
+
+export const useUser = () => useContext(UserContext);

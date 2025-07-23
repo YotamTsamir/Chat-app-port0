@@ -20,10 +20,6 @@
 }
 
 @media (max-width: 768px) {
-  .chat-page-layout {
-    flex-direction: column;
-    height: 100dvh;
-  }
 
   .chat-sidebar {
     width: 100%;

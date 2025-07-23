@@ -7,16 +7,16 @@ interface MessageListProps {
 }
 
 export const MessageList = ({ messages }: MessageListProps) => {
-  const user = useUser();
+  const { user } = useUser();
 
   return (
     <>
       {messages.map((msg) => {
-        const isMe = msg.userName === user?.displayName;
+        const isMe = msg.userEmail === user?.email;
         const photoURL = isMe
           ? user?.photoURL || DEFAULT_IMG
           : msg.photoURL || DEFAULT_IMG;
-
+        const time = msg?.createdAt?.toDate() || new Date();
         return (
           <div
             key={msg.id}
@@ -33,7 +33,7 @@ export const MessageList = ({ messages }: MessageListProps) => {
               <div className="chat-message-header">
                 <span className="chat-message-name">{msg.userName}</span>
                 <span className="chat-message-time">
-                  {msg.createdAt?.toDate().toLocaleTimeString([], {
+                  {time?.toLocaleTimeString([], {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: false,

@@ -36,21 +36,3 @@
   background-color: #f0f0f0;
 }
 
-@media (max-width: 768px) {
-  .user-avatar {
-    width: 32px;
-    height: 32px;
-    border: 1px solid #bbb;
-  }
-
-  .user-menu {
-    position: relative;
-    margin-left: auto;
-  }
-
-  .user-dropdown {
-    right: 0;
-    top: 40px;
-    width: 160px;
-  }
-}

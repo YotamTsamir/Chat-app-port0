@@ -2,21 +2,25 @@ import "./styles/layout.css";
 import "./styles/chat.css";
 import "./styles/auth.css";
 import "./styles/user.css";
-import "./App.css"
+import "./App.css";
+
 import ChatRoom from "./pages/ChatRoom";
 import { useUser } from "./context/UserContext";
 import LoginPage from "./pages/LoginPage";
 import UserMenu from "./components/UserMenu";
+import { Loader } from "./components/Loader";
 
 export default function App() {
-  const user = useUser();
+  const { user, loading } = useUser();
 
-  return user ? (
+  if (loading) return <Loader />;
+
+  if (!user) return <LoginPage />;
+
+  return (
     <>
       <UserMenu />
       <ChatRoom />
     </>
-  ) : (
-    <LoginPage />
   );
 }
