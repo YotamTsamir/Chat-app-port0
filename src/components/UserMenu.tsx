@@ -3,6 +3,9 @@ import { useUser } from "../context/UserContext";
 import { logout } from "../firebase/auth";
 import { updateProfile } from "firebase/auth";
 import { DEFAULT_IMG } from "../consts/ChatConsts";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../firebase/config";
+import { resizeImageToBlob } from "../utils";
 
 const UserMenu = () => {
   const user = useUser();
@@ -15,35 +18,16 @@ const UserMenu = () => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "chat-avatar-upload");
+    const blob = await resizeImageToBlob(file)
 
-    const cloudName = "dlspqjai1";
+    const storageRef = ref(storage, `avatars/${user.uid}.jpg`);
+    await uploadBytes(storageRef, blob);
 
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+    const url = await getDownloadURL(storageRef);
 
-      const data = await res.json();
-      const url = data.secure_url;
-
-      if (!url) {
-        console.error("Upload failed:", data);
-        return;
-      }
-
-      await updateProfile(user, { photoURL: url });
-      await user.reload(); // ✅ refresh to make sure it's updated
-      setOpen(false);
-    } catch (err) {
-      console.error("Upload error:", err);
-    }
+    await updateProfile(user, { photoURL: url });
+    await user.reload();
+    setOpen(false);
   };
 
   return (

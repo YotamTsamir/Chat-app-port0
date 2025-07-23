@@ -1,3 +1,4 @@
+import { DEFAULT_IMG } from "../consts/ChatConsts";
 import { useUser } from "../context/UserContext";
 import type { Message } from "../firebase/firestore";
 
@@ -13,10 +14,8 @@ export const MessageList = ({ messages }: MessageListProps) => {
       {messages.map((msg) => {
         const isMe = msg.userName === user?.displayName;
         const photoURL = isMe
-          ? user?.photoURL ||
-            "https://cdn-icons-png.flaticon.com/512/9131/9131529.png"
-          : msg.photoURL ||
-            "https://cdn-icons-png.flaticon.com/512/9131/9131529.png";
+          ? user?.photoURL || DEFAULT_IMG
+          : msg.photoURL || DEFAULT_IMG;
 
         return (
           <div
