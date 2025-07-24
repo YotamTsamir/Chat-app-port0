@@ -1,3 +1,7 @@
+import { updateProfile, type User } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "./firebase/config";
+
 export const getFriendlyAuthError = (code: string): string => {
   const errorMap: Record<string, string> = {
     "auth/invalid-email": "Invalid email format.",
@@ -46,4 +50,17 @@ export const resizeImageToBlob = (
     img.onerror = reject;
     img.src = URL.createObjectURL(file);
   });
+};
+
+export const handleUpload = async (
+  file: File,
+  user: User
+): Promise<string> => {
+  const blob = await resizeImageToBlob(file);
+  const storageRef = ref(storage, `avatars/${user.uid}.jpg`);
+  await uploadBytes(storageRef, blob);
+  const url = await getDownloadURL(storageRef);
+  await updateProfile(user, { photoURL: url });
+  await user.reload();
+  return url;
 };

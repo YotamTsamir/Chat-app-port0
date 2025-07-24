@@ -6,21 +6,22 @@ import "./App.css";
 
 import ChatRoom from "./pages/ChatRoom";
 import { useUser } from "./context/UserContext";
-import LoginPage from "./pages/LoginPage";
 import UserMenu from "./components/UserMenu";
 import { Loader } from "./components/Loader";
+import AuthModal from "./components/AuthModal";
+import { useState } from "react";
 
 export default function App() {
-  const { user, loading } = useUser();
+  const {  loading } = useUser();
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   if (loading) return <Loader />;
-
-  if (!user) return <LoginPage />;
 
   return (
     <>
       <UserMenu />
       <ChatRoom />
+      {showAuthModal && <AuthModal onClose={() => setShowAuthModal(false)} />}
     </>
   );
 }
