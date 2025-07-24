@@ -12,7 +12,7 @@ import AuthModal from "./components/AuthModal";
 import { useState } from "react";
 
 export default function App() {
-  const {  loading } = useUser();
+  const { loading } = useUser();
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   if (loading) return <Loader />;
